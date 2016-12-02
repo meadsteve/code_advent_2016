@@ -19,9 +19,35 @@ defmodule CodeAdvent2016.Day01.Location do
   def move(%__MODULE__{direction: :east, east: old_value}  = location, change), do: %{location | east: old_value + change}
   def move(%__MODULE__{direction: :west, east: old_value}  = location, change), do: %{location | east: old_value - change}
 
+  def distance(%__MODULE__{north: north, east: east}) do
+    abs(north) + abs(east)
+  end
+
 end
 
 defmodule CodeAdvent2016.Day01 do
+  alias CodeAdvent2016.Day01.Location
+  @file_path "lib/day_01/input.txt"
+
+  def run() do
+    @file_path
+      |> File.read!
+      |> String.split(",")
+      |> Stream.map(&String.trim/1)
+      |> Stream.map(&split_direction_distance/1)
+      |> Enum.reduce(%Location{}, &apply_change/2)
+      |> Location.distance
+      |> IO.inspect
+  end
+
+  defp split_direction_distance("R" <> distance), do: {"R", String.to_integer(distance)}
+  defp split_direction_distance("L" <> distance), do: {"L", String.to_integer(distance)}
+
+  defp apply_change({rotate, move}, %Location{} = location) do
+    location
+    |> Location.rotate(rotate)
+    |> Location.move(move)
+  end
 
 
 end
