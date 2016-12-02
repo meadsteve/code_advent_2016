@@ -1,6 +1,6 @@
 defmodule CodeAdvent2016.Day01.SolutionTest do
   use ExUnit.Case
-  doctest CodeAdvent2016
+  doctest CodeAdvent2016.Day01
 
   test "the truth" do
     assert 1 + 1 == 2
