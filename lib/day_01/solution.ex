@@ -25,6 +25,22 @@ defmodule CodeAdvent2016.Day01.Location do
 
 end
 
+defmodule CodeAdvent2016.Day01.History do
+  alias CodeAdvent2016.Day01.Location
+
+  def add(history, %Location{} = location) do
+    MapSet.put(history, {location.north, location.east})
+  end
+
+  def contains?(history, %Location{} = location) do
+    MapSet.member?(history, {location.north, location.east})
+  end
+
+  def new() do
+    MapSet.new
+  end
+end
+
 defmodule CodeAdvent2016.Day01.Input do
   @file_path "lib/day_01/input.txt"
 
@@ -63,11 +79,12 @@ end
 
 defmodule CodeAdvent2016.Day01.PartTwo do
   alias CodeAdvent2016.Day01.Location
+  alias CodeAdvent2016.Day01.History
   alias CodeAdvent2016.Day01.Input
 
   def run() do
     Input.load()
-      |> Enum.reduce_while({%Location{}, MapSet.new}, &apply_change/2)
+      |> Enum.reduce_while({%Location{}, History.new}, &apply_change/2)
       |> drop_history
       |> Location.distance
       |> IO.inspect
@@ -82,9 +99,9 @@ defmodule CodeAdvent2016.Day01.PartTwo do
   defp move_forward(move, {%Location{} = location, history})
   when move > 0
   do
-    updated_history = MapSet.put(history, {location.north, location.east})
+    updated_history = History.add(history, location)
     new_location = Location.move(location, 1)
-    if MapSet.member?(history, {new_location.north, new_location.east}) do
+    if History.contains?(history, location) do
       {:halt, {new_location, updated_history}}
     else
       move_forward(move - 1, {new_location, updated_history})
