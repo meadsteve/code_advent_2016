@@ -25,29 +25,72 @@ defmodule CodeAdvent2016.Day01.Location do
 
 end
 
-defmodule CodeAdvent2016.Day01 do
-  alias CodeAdvent2016.Day01.Location
+defmodule CodeAdvent2016.Day01.Input do
   @file_path "lib/day_01/input.txt"
 
-  def run() do
+  def load() do
     @file_path
       |> File.read!
       |> String.split(",")
       |> Stream.map(&String.trim/1)
       |> Stream.map(&split_direction_distance/1)
-      |> Enum.reduce(%Location{}, &apply_change/2)
-      |> Location.distance
-      |> IO.inspect
   end
 
   defp split_direction_distance("R" <> distance), do: {"R", String.to_integer(distance)}
   defp split_direction_distance("L" <> distance), do: {"L", String.to_integer(distance)}
 
+end
+
+defmodule CodeAdvent2016.Day01.PartOne do
+  alias CodeAdvent2016.Day01.Location
+  alias CodeAdvent2016.Day01.Input
+
+  def run() do
+    Input.load()
+      |> Enum.reduce(%Location{}, &apply_change/2)
+      |> Location.distance
+      |> IO.inspect
+  end
+
   defp apply_change({rotate, move}, %Location{} = location) do
     location
     |> Location.rotate(rotate)
     |> Location.move(move)
+    |> IO.inspect
   end
 
+end
+
+defmodule CodeAdvent2016.Day01.PartTwo do
+  alias CodeAdvent2016.Day01.Location
+  alias CodeAdvent2016.Day01.Input
+
+  def run() do
+    Input.load()
+      |> Enum.reduce_while({%Location{}, MapSet.new}, &apply_change/2)
+      |> drop_history
+      |> Location.distance
+      |> IO.inspect
+  end
+
+  defp apply_change({rotate, move}, {%Location{} = location, history}) do
+    new_location = Location.rotate(location, rotate)
+    move_forward(move, {new_location, history})
+  end
+
+  defp move_forward(0, data), do: {:cont, data}
+  defp move_forward(move, {%Location{} = location, history})
+  when move > 0
+  do
+    updated_history = MapSet.put(history, {location.north, location.east})
+    new_location = Location.move(location, 1)
+    if MapSet.member?(history, {new_location.north, new_location.east}) do
+      {:halt, {new_location, updated_history}}
+    else
+      move_forward(move - 1, {new_location, updated_history})
+    end
+  end
+
+  defp drop_history({location, _history}), do: location
 
 end
