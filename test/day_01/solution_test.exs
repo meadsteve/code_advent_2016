@@ -1,6 +1,5 @@
 defmodule CodeAdvent2016.Day01.SolutionTest do
   use ExUnit.Case
-  doctest CodeAdvent2016.Day01
 
   alias CodeAdvent2016.Day01.Location
 
