@@ -12,4 +12,8 @@ defmodule CodeAdvent2016.Day03.SolutionTest do
     refute Triangles.valid?([25, 10, 5])
   end
 
+  test "Complete solution" do
+    assert CodeAdvent2016.Day03.PartOne.run == 862
+  end
+
 end

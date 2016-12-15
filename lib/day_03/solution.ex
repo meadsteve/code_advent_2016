@@ -18,7 +18,6 @@ defmodule CodeAdvent2016.Day03.PartOne do
     |> Stream.map(&to_ints/1)
     |> Stream.filter(&Triangles.valid?/1)
     |> Enum.count
-    |> IO.inspect
    end
 
    defp to_ints(strings) do
