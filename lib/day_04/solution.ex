@@ -1,9 +1,10 @@
 defmodule CodeAdvent2016.Day04.Room do
   defstruct letters: "",
+            raw_letters: "",
             sector_id: 0,
             checksum: ""
 
-  @string_pattern ~r/(?<letters>[a-z\-]+)(?<sector_id>[0-9]+)\[(?<checksum>[a-z]{5})\]/i
+  @string_pattern ~r/(?<letters>[a-z\-]+)\-(?<sector_id>[0-9]+)\[(?<checksum>[a-z]{5})\]/i
 
   def from_string(input) do
     parts = input
@@ -11,9 +12,10 @@ defmodule CodeAdvent2016.Day04.Room do
     |> matches
 
     %__MODULE__{
-      letters:   String.replace(parts["letters"], "-", ""),
-      sector_id: String.to_integer(parts["sector_id"]),
-      checksum:  parts["checksum"]
+      letters:     String.replace(parts["letters"], "-", ""),
+      raw_letters: parts["letters"],
+      sector_id:   String.to_integer(parts["sector_id"]),
+      checksum:   parts["checksum"]
     }
   end
 

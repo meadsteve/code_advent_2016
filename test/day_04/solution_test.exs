@@ -6,6 +6,7 @@ defmodule CodeAdvent2016.Day04.SolutionTest do
   test "Room string is parsed in to a struct" do
     assert Room.from_string("aaaaa-bbb-z-y-x-123[abxyz]") == %Room{
       letters: "aaaaabbbzyx",
+      raw_letters: "aaaaa-bbb-z-y-x",
       sector_id: 123,
       checksum: "abxyz"
     }
