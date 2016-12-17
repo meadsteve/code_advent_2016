@@ -2,11 +2,12 @@ defmodule CodeAdvent2016.Day04.SolutionTest do
   use ExUnit.Case
 
   alias CodeAdvent2016.Day04.Room
+  alias CodeAdvent2016.Day04.Decoder
+  alias CodeAdvent2016.Day04.Decoder.DecodedRoom
 
   test "Room string is parsed in to a struct" do
     assert Room.from_string("aaaaa-bbb-z-y-x-123[abxyz]") == %Room{
-      letters: "aaaaabbbzyx",
-      raw_letters: "aaaaa-bbb-z-y-x",
+      encoded_room_name: "aaaaa-bbb-z-y-x",
       sector_id: 123,
       checksum: "abxyz"
     }
@@ -41,4 +42,18 @@ defmodule CodeAdvent2016.Day04.SolutionTest do
     assert CodeAdvent2016.Day04.PartOne.run == 173787
   end
 
+  test "the real name for qzmt-zixmtkozy-ivhz-343 is very encrypted name" do
+    assert Decoder.decode("qzmt-zixmtkozy-ivhz", 343) == "very encrypted name"
+  end
+
+  @tag :solutions
+  test "Part 2 solution" do
+    assert CodeAdvent2016.Day04.PartTwo.run == %DecodedRoom{
+      checksum: "mcrpa",
+      decoded_room_name: "northpole object storage",
+      encoded_room_name: "lmprfnmjc-mzhcar-qrmpyec",
+      sector_id: 548
+    }
+
+  end
 end
