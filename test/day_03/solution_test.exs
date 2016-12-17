@@ -13,6 +13,7 @@ defmodule CodeAdvent2016.Day03.SolutionTest do
     refute Triangles.valid?([25, 10, 5])
   end
 
+  @tag :solutions
   test "Complete solution part one" do
     assert CodeAdvent2016.Day03.PartOne.run == 862
   end
@@ -32,6 +33,7 @@ defmodule CodeAdvent2016.Day03.SolutionTest do
     assert (input |> VerticalReader.to_triangles |> Enum.take(3)) == expected_triangles
   end
 
+  @tag :solutions
   test "Complete solution part two" do
     assert CodeAdvent2016.Day03.PartTwo.run == 1577
   end
