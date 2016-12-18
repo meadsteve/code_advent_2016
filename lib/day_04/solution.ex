@@ -40,16 +40,8 @@ defmodule CodeAdvent2016.Day04.Room do
 
 end
 
-defmodule CodeAdvent2016.Day04.Decoder.DecodedRoom do
-  defstruct encoded_room_name: "",
-            decoded_room_name: "",
-            sector_id: 0,
-            checksum: ""
-end
-
 defmodule CodeAdvent2016.Day04.Decoder do
   alias CodeAdvent2016.Day04.Room
-  alias CodeAdvent2016.Day04.Decoder.DecodedRoom
 
   def decode(encoded_room_name, sector_id) do
     raw = encoded_room_name
@@ -58,18 +50,28 @@ defmodule CodeAdvent2016.Day04.Decoder do
     |> :erlang.iolist_to_binary
   end
 
-  def decode(%Room{} = room) do
-    %DecodedRoom{
+ defp rotate_letter(?-, _), do: ' '
+ defp rotate_letter(letter, sector_id),do: ?a + rem (letter - ?a + sector_id), (?z - ?a + 1)
+
+end
+
+defmodule CodeAdvent2016.Day04.DecodedRoom do
+  alias CodeAdvent2016.Day04.Room
+  alias CodeAdvent2016.Day04.Decoder
+
+  defstruct encoded_room_name: "",
+            decoded_room_name: "",
+            sector_id: 0,
+            checksum: ""
+
+  def from_room(%Room{} = room) do
+    %__MODULE__{
       encoded_room_name: room.encoded_room_name,
-      decoded_room_name: decode(room.encoded_room_name, room.sector_id),
+      decoded_room_name: Decoder.decode(room.encoded_room_name, room.sector_id),
       sector_id: room.sector_id,
       checksum: room.checksum
     }
   end
-
- defp rotate_letter(?-, _), do: ' '
- defp rotate_letter(letter, sector_id),do: ?a + rem (letter - ?a + sector_id), (?z - ?a + 1)
-
 end
 
 defmodule CodeAdvent2016.Day04.PartOne do
@@ -90,14 +92,14 @@ end
 defmodule CodeAdvent2016.Day04.PartTwo do
   @file_path "lib/day_04/input.txt"
   alias CodeAdvent2016.Day04.Room
-  alias CodeAdvent2016.Day04.Decoder
+  alias CodeAdvent2016.Day04.DecodedRoom
 
   def run() do
     [result] = @file_path
     |> File.stream!
     |> Stream.map(&Room.from_string/1)
     |> Stream.filter(&Room.real?/1)
-    |> Stream.map(&Decoder.decode(&1))
+    |> Stream.map(&DecodedRoom.from_room/1)
     |> Stream.filter(fn room -> room.decoded_room_name == "northpole object storage" end)
     |> Enum.take(1)
 

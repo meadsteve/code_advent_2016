@@ -3,7 +3,7 @@ defmodule CodeAdvent2016.Day04.SolutionTest do
 
   alias CodeAdvent2016.Day04.Room
   alias CodeAdvent2016.Day04.Decoder
-  alias CodeAdvent2016.Day04.Decoder.DecodedRoom
+  alias CodeAdvent2016.Day04.DecodedRoom
 
   test "Room string is parsed in to a struct" do
     assert Room.from_string("aaaaa-bbb-z-y-x-123[abxyz]") == %Room{
