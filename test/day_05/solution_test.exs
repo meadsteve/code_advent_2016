@@ -26,4 +26,10 @@ defmodule CodeAdvent2016.Day05.SolutionTest do
     assert CodeAdvent2016.Day05.PartOne.run == "801b56a7"
   end
 
+  @tag :solutions
+  @tag timeout: 120_000
+  test "Part 2 solution" do
+    assert CodeAdvent2016.Day05.PartTwo.run == "424a0197"
+  end
+
 end
