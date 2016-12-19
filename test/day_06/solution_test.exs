@@ -1,7 +1,8 @@
 defmodule CodeAdvent2016.Day06.SolutionTest do
   use ExUnit.Case
 
-  alias CodeAdvent2016.Day06.PartOne.Counter
+  alias CodeAdvent2016.Day06.Counter
+  alias CodeAdvent2016.Day06.Finder
 
   test "sets up letter count at positions" do
     assert Counter.update_count("abcd", %{}) == %{
@@ -28,12 +29,21 @@ defmodule CodeAdvent2016.Day06.SolutionTest do
   end
 
   test "Finds the most common" do
-    assert Counter.most_common(%{"b" => 2, "a" => 1}) == "b"
+    assert Finder.most_common(%{"b" => 2, "a" => 1}) == "b"
+  end
+
+  test "Finds the least common" do
+    assert Finder.least_common(%{"b" => 2, "a" => 1}) == "a"
   end
 
   @tag :solutions
   test "Part 1 solution" do
-    assert CodeAdvent2016.Day06.PartOne.run == ""
+    assert CodeAdvent2016.Day06.PartOne.run == "ursvoerv"
+  end
+
+  @tag :solutions
+  test "Part 2 solution" do
+    assert CodeAdvent2016.Day06.PartTwo.run == "ursvoerv"
   end
 
 end
