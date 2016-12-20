@@ -57,22 +57,19 @@ defmodule CodeAdvent2016.Day06.PartOne do
 
   def run() do
     counts()
-    |> Enum.map(fn {position, letters} -> Finder.most_common(letters) end)
+    |> Enum.map(fn {_position, letters} -> Finder.most_common(letters) end)
     |> Enum.join
   end
 
 end
 
 defmodule CodeAdvent2016.Day06.PartTwo do
-
   alias CodeAdvent2016.Day06.PartOne
-
-  alias CodeAdvent2016.Day06.Counter
   alias CodeAdvent2016.Day06.Finder
 
   def run() do
     PartOne.counts()
-    |> Enum.map(fn {position, letters} -> Finder.least_common(letters) end)
+    |> Enum.map(fn {_position, letters} -> Finder.least_common(letters) end)
     |> Enum.join
   end
 
