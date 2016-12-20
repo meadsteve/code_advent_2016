@@ -21,18 +21,30 @@ defmodule CodeAdvent2016.Day07.SolutionTest do
     assert AbbaDetector.has_abba?("abab[mnop]qrst") === false
   end
 
-  test "abab[abba]qrst can be filtered to only the hypernet [abba]" do
-    assert Hypernet.hypernets_only("abab[abba]qrst") == "abba"
+  test "xyab[qwer]baer doesnt have abba (abba can't be matched accross a hypernet')" do
+    assert AbbaDetector.has_abba?("xyab[qwer]baer") === false
+  end
+
+
+  test "abab[abba]qrst can be filtered to only the hypernet abba" do
+    assert Hypernet.hypernets_only("abab[abba]qrst") == ["abba"]
+  end
+
+  test "abab[abba]qrst can be filtered to only the hypernet abba " do
+    assert Hypernet.hypernets_only("abab[abba]qrst[derfd]") == ["abba", "derfd"]
   end
 
   test "abab[abba]qrst has a hypernet abba" do
     result = "abab[abba]qrst"
     |> Hypernet.hypernets_only
-    |> AbbaDetector.has_abba?
+    |> Enum.any?(&AbbaDetector.has_abba?/1)
 
     assert result == true
   end
 
+  test "according to part 1 abcd[bddb]xyyx does not support tls" do
+    assert CodeAdvent2016.Day07.PartOne.supports_tls?("abcd[bddb]xyyx") === false
+  end
 
   @tag :solutions
   test "Part 1 solution" do

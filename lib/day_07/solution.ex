@@ -2,7 +2,12 @@ defmodule CodeAdvent2016.Day07.AbbaDetector do
 
   def has_abba?(string) do
     string
-    |> String.replace(~r/\[[^\]]+\]/, "")
+    |> String.split(~r/\[[^\]]+\]/)
+    |> Enum.any?(&part_has_abba?/1)
+  end
+
+  defp part_has_abba?(part) do
+    part
     |> String.graphemes
     |> has_reversed_pair?
   end
@@ -18,8 +23,7 @@ defmodule CodeAdvent2016.Day07.Hypernet do
 
   def hypernets_only(string) do
     Regex.scan(~r/\[([^\]]+)\]/, string)
-    |> Stream.map(fn [_whole, contents] -> contents end)
-    |> Enum.join(" ")
+    |> Enum.map(fn [_whole, contents] -> contents end)
   end
 
 end
@@ -33,15 +37,16 @@ defmodule CodeAdvent2016.Day07.PartOne do
   def lines() do
     @file_path
     |> File.stream!
+    |> Stream.map(&String.trim/1)
   end
 
   def run() do
     lines()
-    |> Stream.filter(&supports_tls/1)
+    |> Stream.filter(&supports_tls?/1)
     |> Enum.count
   end
 
-  def supports_tls(input) do
+  def supports_tls?(input) do
     AbbaDetector.has_abba?(input)
     && !has_hypernet_abba?(input)
   end
@@ -49,7 +54,7 @@ defmodule CodeAdvent2016.Day07.PartOne do
   def has_hypernet_abba?(input) do
     input
     |> Hypernet.hypernets_only
-    |> AbbaDetector.has_abba?
+    |> Enum.any?(&AbbaDetector.has_abba?/1)
   end
 
 end
