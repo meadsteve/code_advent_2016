@@ -3,6 +3,7 @@ defmodule CodeAdvent2016.Day07.SolutionTest do
 
   alias CodeAdvent2016.Day07.AbbaDetector
   alias CodeAdvent2016.Day07.Address
+  alias CodeAdvent2016.Day07.Tla
 
   test "abba[mnop]qrst and qrst[mnop]xyyx have abba" do
     assert "abba[mnop]qrst" |> Address.primary_parts |>  AbbaDetector.has_abba? === true
@@ -42,13 +43,46 @@ defmodule CodeAdvent2016.Day07.SolutionTest do
     assert result == true
   end
 
+  test "aba[bab]xyz has an ABA of ab in the primary parts" do
+    result = "aba[bab]xyz"
+    |> Address.primary_parts
+    |> Tla.list_aba
+
+    assert result == [ ["a", "b"] ]
+  end
+
+  test "zazbz[bzb]cdb has two ABAs za and zb in the primary parts" do
+    result = "zazbz[bzb]cdb"
+    |> Address.primary_parts
+    |> Tla.list_aba
+
+    assert result == [ ["z", "b"], ["z", "a"] ]
+  end
+
+  test "aaa[kek]eke has a BAB of ek in the hypernet" do
+    result = "aaa[kek]eke"
+    |> Address.hypernets_only
+    |> Tla.list_bab
+
+    assert result == [ ["k", "e"] ]
+  end
+
   test "according to part 1 abcd[bddb]xyyx does not support tls" do
     assert CodeAdvent2016.Day07.PartOne.supports_tls?("abcd[bddb]xyyx") === false
+  end
+
+  test "according to part 2 aaa[kek]eke supports ssl" do
+    assert CodeAdvent2016.Day07.PartTwo.supports_ssl?("aaa[kek]eke") === true
   end
 
   @tag :solutions
   test "Part 1 solution" do
     assert CodeAdvent2016.Day07.PartOne.run == 118
+  end
+
+  @tag :solutions
+  test "Part 2 solution" do
+    assert CodeAdvent2016.Day07.PartTwo.run == 260
   end
 
 end
