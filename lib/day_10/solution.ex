@@ -80,6 +80,10 @@ defmodule CodeAdvent2016.Day10.BotSupervisor do
     bot
   end
 
+  def start_bot(bot_number) do
+    Supervisor.start_child(:bot_supervisor, [bot_number])
+  end
+
   def init(_) do
     children = [
       worker(CodeAdvent2016.Day10.Bot, [])
@@ -145,13 +149,27 @@ end
 
 defmodule CodeAdvent2016.Day10.PartOne do
   @file_path "lib/day_10/input.txt"
+  alias CodeAdvent2016.Day10.BotSupervisor
+  alias CodeAdvent2016.Day10.BotRegistry
+  alias CodeAdvent2016.Day10.Bot
 
   def lines() do
     @file_path
-    |> File.read!()
+    |> File.stream!()
   end
 
   def run() do
+    {:ok, _} = BotRegistry.start_link()
+    {:ok, _} = BotSupervisor.start_link()
 
+    lines
+    |> Enum.each(&run_line/1)
+  end
+
+  defp run_line("bot" <> instruction) do
+    data = Regex.named_captures(~r/(?<bot>[0-9]+) gives low to bot (?<low>[0-9]+) and high to bot (?<high>[0-9]+)/i, instruction)
+    BotSupervisor.start_bot(String.to_integer(data["bot"]))
+    Bot.set_low_target(String.to_integer(data["bot"]), target: String.to_integer(data["low"]))
+    Bot.set_high_target(String.to_integer(data["bot"]), target:  String.to_integer(data["high"]))
   end
 end
